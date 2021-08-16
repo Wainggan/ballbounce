@@ -52,20 +52,43 @@ function draw_circle(x, y, r = 10, fill = false) {
         ctx.fill();
     }
 }
+function draw_line(x1, y1, x2, y2) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1)
+    ctx.lineTo(x2, y2)
+    ctx.strokeStyle = "black"
+    ctx.stroke();
+}
+
 
 
 let balls = [];
+let walls = [];
 
-for (let i = 0; i < 0; i++) {
-    balls.push(new Ball(Math.random() * canvas.clientWidth, Math.random() * canvas.clientHeight, Math.random() * 20 + 10))
+{
+    let winW = canvas.clientWidth
+    let winH = canvas.clientHeight
+
+    walls.push(new Wall(0, 0, winW, 0))
+    walls.push(new Wall(winW, 0, winW, winH))
+    walls.push(new Wall(winW, winH, 0, winH))
+    walls.push(new Wall(0, winH, 0, 0))
+
 }
-balls.push(new Ball(Math.random() * canvas.clientWidth, Math.random() * canvas.clientHeight, Math.random() * 20 + 10, 2))
-balls.push(new Ball(Math.random() * canvas.clientWidth, Math.random() * canvas.clientHeight, Math.random() * 20 + 10, 0))
+
+for (let i = 0; i < 32; i++) {
+    let b = new Ball(Math.random() * canvas.clientWidth, Math.random() * canvas.clientHeight, Math.random() * 20 + 10, Math.random() * 10 + 5)
+    b.vel.x = Math.random() * 4 - 2
+    b.vel.y = Math.random() * 4 - 2
+    b.vel = b.vel.Unit()
+    balls.push(b)
+}
+
 
 function mainLoop() {
-    balls[0].control()
     for (let b of balls) {
         b.update()
+
     }
     
 
@@ -73,6 +96,11 @@ function mainLoop() {
     for (let b of balls) {
         b.show()
     }
+    for (let w of walls) {
+        w.show()
+    }
+    
+
     requestAnimationFrame(mainLoop)
 }
 requestAnimationFrame(mainLoop)

@@ -11,6 +11,8 @@ class Ball {
             this.invMass = 1/this.mass
         }
 
+        this.color = "#ff0000";
+
         this.vel = new Vector(0, 0);
         this.acc = new Vector(0, 0);
     }
@@ -49,6 +51,6 @@ class Ball {
     
 
     show() {
-        draw_circle(this.pos.x, this.pos.y, this.r, true)
+        draw_circle(this.pos.x, this.pos.y, this.r, this.color, true)
     }
 }

@@ -42,57 +42,107 @@ canvas.addEventListener("keyup", (k) => {
 })
 
 // draw functions
-function draw_circle(x, y, r = 10, fill = false) {
+function draw_circle(x, y, r = 10, color = "red", fill = false) {
     ctx.beginPath();
     ctx.arc(x, y, r, 0, 2*Math.PI);
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = color;
     ctx.stroke();
     if (fill) {
-        ctx.fillStyle = "red";
+        ctx.fillStyle = color;
         ctx.fill();
     }
 }
-function draw_line(x1, y1, x2, y2) {
+function draw_line(x1, y1, x2, y2, color = "black") {
     ctx.beginPath();
     ctx.moveTo(x1, y1)
     ctx.lineTo(x2, y2)
-    ctx.strokeStyle = "black"
+    ctx.strokeStyle = color
     ctx.stroke();
 }
 
+// helper functions
+function randomRange(min, max) {
+    return Math.random() * (max - min) + min;
+}
 
+// i hate myself
+class Color {
+    constructor(r = -1, g = -1, b = -1) {
+        this.r = r
+        this.g = g
+        this.b = b
+        if (r != -1 && (g == -1 || b == -1)) {
+            this.g = r
+            this.b = r
+        }
+    }
+    Hex() {
+        let rS = parseInt(this.r, 10).toString(16).padStart(2, "0")
+        let gS = parseInt(this.g, 10).toString(16).padStart(2, "0")
+        let bS = parseInt(this.b, 10).toString(16).padStart(2, "0")
+
+        return "#" + rS + gS + bS
+    }
+    static Hex(r=0, g=0, b=0) {
+        let rS = parseInt(r, 10).toString(16).padStart(2, "0")
+        let gS = parseInt(g, 10).toString(16).padStart(2, "0")
+        let bS = parseInt(b, 10).toString(16).padStart(2, "0")
+
+        return "#" + rS + gS + bS
+    }
+}
+
+let backgroundColor = new Color(100)
+
+
+ctx.canvas.width  = window.innerWidth;
+ctx.canvas.height = window.innerHeight;
 
 let balls = [];
 let walls = [];
 
+// border walls
 {
     let winW = canvas.clientWidth
     let winH = canvas.clientHeight
 
-    walls.push(new Wall(0, 0, winW, 0))
-    walls.push(new Wall(winW, 0, winW, winH))
-    walls.push(new Wall(winW, winH, 0, winH))
-    walls.push(new Wall(0, winH, 0, 0))
+    walls.push(new Wall(0-1, 0-1, winW, 0-1))
+    walls.push(new Wall(winW, 0-1, winW, winH))
+    walls.push(new Wall(winW, winH, 0-1, winH))
+    walls.push(new Wall(0-1, winH, 0-1, 0-1))
 
 }
 
-for (let i = 0; i < 32; i++) {
-    let b = new Ball(Math.random() * canvas.clientWidth, Math.random() * canvas.clientHeight, Math.random() * 20 + 10, Math.random() * 10 + 5)
-    b.vel.x = Math.random() * 4 - 2
-    b.vel.y = Math.random() * 4 - 2
-    b.vel = b.vel.Unit()
-    balls.push(b)
+{
+    let density = Math.round(Math.min(canvas.clientWidth, canvas.clientHeight) / 5)
+
+    for (let i = 0; i < density; i++) {
+        let ma = randomRange(15, 30)
+        let b = new Ball(randomRange(0, canvas.clientWidth), randomRange(0, canvas.clientHeight), ma, ma)
+        b.vel.x = randomRange(-2, 2)
+        b.vel.y = randomRange(-2, 2)
+        b.vel = b.vel.Unit()
+        b.color = Color.Hex(randomRange(150, 255), randomRange(100, 150), randomRange(150, 255))
+        balls.push(b)
+    }
 }
+
 
 
 function mainLoop() {
+    
+    ctx.canvas.width  = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+
     for (let b of balls) {
         b.update()
 
     }
     
-
-    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight)
+    
+    ctx.rect(0, 0, canvas.clientWidth, canvas.clientHeight)
+    ctx.fillStyle = backgroundColor.Hex();
+    ctx.fill();
     for (let b of balls) {
         b.show()
     }

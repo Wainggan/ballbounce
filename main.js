@@ -1,6 +1,8 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext("2d");
 
+//const video = document.querySelector("video");
+
 // input
 let key = {
     left: false,
@@ -95,8 +97,8 @@ class Color {
 let backgroundColor = new Color(100)
 
 
-ctx.canvas.width  = window.innerWidth;
-ctx.canvas.height = window.innerHeight;
+ctx.canvas.width  = 1920//window.innerWidth;
+ctx.canvas.height = 1080//window.innerHeight;
 
 let balls = [];
 let walls = [];
@@ -127,12 +129,37 @@ let walls = [];
     }
 }
 
+// i hate javascript
+/*
+//const recorder = new CanvasRecorder(canvas,4500000);
+var videoStream = canvas.captureStream(30);
 
+var mediaRecorder = new MediaRecorder(videoStream, {
+    audioBitsPerSecond: 0,
+    //videoBitsPerSecond: 20971520
+    bitsPerSecond: 20971520
+});
+var chunks = [];
+mediaRecorder.ondataavailable = function(e) {
+  chunks.push(e.data);
+};
+mediaRecorder.onstop = function(e) {
+    var blob = new Blob(chunks, { 'type' : 'video/mp4' });
+    chunks = [];
+    var videoURL = URL.createObjectURL(blob);
+    video.src = videoURL;
+};
+mediaRecorder.ondataavailable = function(e) {
+    chunks.push(e.data);
+};
+mediaRecorder.start();
+//setTimeout(function (){ mediaRecorder.stop(); }, 5000);
 
+let totalFrames = 0
+*/
+
+//recorder.start();
 function mainLoop() {
-    
-    ctx.canvas.width  = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
 
     for (let b of balls) {
         b.update()
@@ -152,5 +179,18 @@ function mainLoop() {
     
 
     requestAnimationFrame(mainLoop)
+
+    /*
+    if (totalFrames != -1) {
+        totalFrames++
+    }
+    if (totalFrames >= 60 * 5) {
+        //recorder.stop();
+        //let fileName = Math.floor(Math.random()*9999999).toString()
+        //recorder.save(fileName+'.webm');
+        mediaRecorder.stop();
+        totalFrames = -1;
+    }
+    */
 }
 requestAnimationFrame(mainLoop)

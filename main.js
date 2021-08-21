@@ -97,8 +97,8 @@ class Color {
 let backgroundColor = new Color(100)
 
 
-ctx.canvas.width  = 1920//window.innerWidth;
-ctx.canvas.height = 1080//window.innerHeight;
+ctx.canvas.width  = window.innerWidth;
+ctx.canvas.height = window.innerHeight;
 
 let balls = [];
 let walls = [];
